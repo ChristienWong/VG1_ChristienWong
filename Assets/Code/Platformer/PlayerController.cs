@@ -16,12 +16,12 @@ namespace Platformer {
         void Update() {
             // Move Player Left
             if(Input.GetKey(KeyCode.A)) {
-                _rigidbody2D.AddForce(Vector2.left * 12f * Time.deltaTime, ForceMode2D.Impulse);
+                _rigidbody2D.AddForce(Vector2.left * 18f * Time.deltaTime, ForceMode2D.Impulse);
             }
 
             // Move Player Right
             if(Input.GetKey(KeyCode.D)) {
-                _rigidbody2D.AddForce(Vector2.right * 12f * Time.deltaTime, ForceMode2D.Impulse);
+                _rigidbody2D.AddForce(Vector2.right * 18f * Time.deltaTime, ForceMode2D.Impulse);
             }
 
             // Jump
