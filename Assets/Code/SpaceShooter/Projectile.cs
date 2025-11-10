@@ -14,8 +14,8 @@ public class Projectile : MonoBehaviour
     }
 
     void Update(){
-        float acceleration = 1f;
-        float maxSpeed = 2f;
+        float acceleration = GameController.instance.missileSpeed / 2f;
+        float maxSpeed = GameController.instance.missileSpeed;
        
         ChooseNearestTarget();
         
@@ -60,21 +60,24 @@ public class Projectile : MonoBehaviour
             return;
         }
 
-        GameObject explosionPrefab = GameController.instance != null
-            ? GameController.instance.explosionPrefab
-            : null;
-
-        if (explosionPrefab != null){
-            GameObject explosion = Instantiate(
-                explosionPrefab,
-                transform.position,
-                Quaternion.identity
-            );
-            Destroy(explosion, 0.25f);
-        }
-
+        SpawnExplosion();
         Destroy(otherGameObject);
         Destroy(gameObject);
+        GameController.instance?.EarnPoints(10);
+    }
+
+    void SpawnExplosion(){
+        GameObject explosionPrefab = GameController.instance?.explosionPrefab;
+        if (explosionPrefab == null){
+            return;
+        }
+
+        GameObject explosion = Instantiate(
+            explosionPrefab,
+            transform.position,
+            Quaternion.identity
+        );
+        Destroy(explosion, 0.25f);
     }
 }
 }
