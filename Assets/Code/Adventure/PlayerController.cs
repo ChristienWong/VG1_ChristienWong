@@ -3,15 +3,28 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Adventure{
+public enum Direction{
+    Up = 0,
+    Down = 1,
+    Left = 2,
+    Right =3
+}
+
+
+
 public class PlayerController : MonoBehaviour
 {
     Rigidbody2D _rigidbody;
     Animator _animator;
+    SpriteRenderer _spriteRenderer;
+    public Transform[] attackZones; 
     public KeyCode keyUp;
     public KeyCode keyDown;
     public KeyCode keyLeft;
     public KeyCode keyRight;
     public float moveSpeed; 
+    public Sprite[] sprites; 
+    public Direction facingDirection;
     
     
     
@@ -19,9 +32,12 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+
     }
 
     void FixedUpdate()
+    
     {
         if(Input.GetKey(keyUp)){
             _rigidbody.AddForce(Vector2.up * moveSpeed * Time.fixedDeltaTime, ForceMode2D.Impulse);
@@ -46,6 +62,26 @@ public class PlayerController : MonoBehaviour
         }
         if(Input.GetKeyDown(KeyCode.Space)){
             _animator.SetTrigger("attack");
+
+            int facingDirectionIndex = (int)facingDirection;
+            Transform attackZone = attackZones[facingDirectionIndex];
+            Collider2D[] hits = Physics2D.OverlapCircleAll(attackZone.position, 0.1f);
+
+            foreach(Collider2D hit in hits){
+                Breakable breakableObject = hit.GetComponent<Breakable>();
+                if(breakableObject){
+                    breakableObject.Break();
+                }
+            }
+        }
+    }
+
+    void LateUpdate(){
+        for(int i =0; i < sprites.Length; i++){
+            if(_spriteRenderer.sprite == sprites[i]){
+                facingDirection = (Direction)i;
+                break;
+            }
         }
     }
 }
